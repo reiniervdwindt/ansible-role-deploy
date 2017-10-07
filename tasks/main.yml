@@ -1,0 +1,24 @@
+---
+- name: "Creates project directory"
+  file: path="{{ application_path }}" state=directory
+
+- name: "Get release timestamp"
+  command: date -u +%Y%m%d%H%M%S
+  register: timestamp
+
+- name: "Name release directory"
+  command: echo "{{ application_path }}/releases/{{ timestamp.stdout }}"
+  register: release_path
+
+- name: "Make sure release folder exists remotely"
+  file: path="{{ release_path.stdout }}" state=directory mode=0775
+
+- name: "Get source code from repo"
+  become: false
+  git: repo="{{ repository }}" dest="{{ release_path.stdout }}" version="{{ branch }}"
+
+- name: "Finish deployment"
+  file: state=link  path="{{ application_path }}/current" src="{{ release_path.stdout }}"
+
+- name: "Cleanup old releases"
+  shell: "ls -dt {{ application_path }}/releases/* | tail -n +4 | xargs rm -rf"
