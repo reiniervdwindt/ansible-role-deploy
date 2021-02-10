@@ -15,7 +15,7 @@
 
 - name: "Get source code from repo"
   become: false
-  git: repo="{{ repository }}" dest="{{ release_path.stdout }}" version="{{ branch }}"
+  git: repo="{{ repository }}" dest="{{ release_path.stdout }}" version="{{ version }}"
 
 - name: "Finish deployment"
   file: state=link  path="{{ application_path }}/current" src="{{ release_path.stdout }}"
