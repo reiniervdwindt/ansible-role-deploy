@@ -4,5 +4,8 @@ application_name: "default"
 application_path: "/app/{{ application_name }}"
 application_venv: "{{ application_path }}/venv"
 
+# Distribution
+distribution_path: "../dist/{{ application_name }}-{{ version }}.tar.gz"
+
 # Python
 python_binary: "/usr/bin/python"
